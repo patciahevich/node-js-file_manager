@@ -18,8 +18,34 @@ The file manager does the following:
 
 ```
 
-2. To finish our work press Ctrl + C or use command:
+2. List of operations and their syntax:
+
+- Go upper from current directory:
+
+  ```
+  up
+  ```
+
+- Go to dedicated folder from current directory (path_to_directory can be relative or absolute):
 
 ```
+cd path_to_directory
+```
+
+- Print in console list of all files and folders in current directory:
+
+```
+ls
+```
+
+3. To finish our work press Ctrl + C or use command:
+
+```
+
 .exit
+
+```
+
+```
+
 ```
