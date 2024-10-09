@@ -17,3 +17,9 @@ The file manager does the following:
   npm run start -- --username=your_username
 
 ```
+
+2. To finish our work press Ctrl + C or use command:
+
+```
+.exit
+```
