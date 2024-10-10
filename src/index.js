@@ -6,6 +6,7 @@ import { readFile, moveFile } from './utils/streams.js';
 import { createFile, deleteFile, renameFile } from './utils/fs.js';
 import { osInfo } from './utils/os.js';
 import { calculateHash } from './utils/hash.js';
+import { compressFile, decompress } from './utils/compress.js';
 
 const args = process.argv.slice(2);
 
@@ -91,6 +92,14 @@ rl.on('line', (line) => {
 
     case 'hash':
       calculateHash(args[1]);
+      break;
+
+    case 'compress' :
+      compressFile(args[1], args[2]);
+      break;
+
+    case 'decompress' :
+      decompress(args[1], args[2]);
       break;
 
     case '.exit':
