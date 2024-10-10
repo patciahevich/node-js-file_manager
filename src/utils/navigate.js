@@ -15,16 +15,14 @@ const parentDir = path.dirname(currentDir);
 }
 
 
-export function goToFile(command) {
+export function goToFile(pathToFile) {
 
-  const PATH = command.slice(3);
-
-  if(!PATH) {
+  if(!pathToFile) {
     console.error('Operation failed: Please use the command format: cd path_to_directory')
     return
   }
 
-const targetDirectory = path.resolve(PATH);
+const targetDirectory = path.resolve(pathToFile);
 
   try {
     process.chdir(targetDirectory);

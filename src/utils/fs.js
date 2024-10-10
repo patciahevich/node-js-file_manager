@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'path';
 
-export function createFile(command) {
-  const fileName = command.slice(4);
+export function createFile(fileName) {
 
   if(!fileName) {
     console.error('Operation failed: You should write the file name')
@@ -23,8 +22,7 @@ export function createFile(command) {
   })
 }
 
-export function renameFile(command) {
-  const [pathToFile, newName] = command.slice(3).split(' ');
+export function renameFile(pathToFile, newName) {
 
   if(!pathToFile || !newName) {
     console.error('Operation failed: Please use the command format: rn path_to_file new_filename')
@@ -42,8 +40,7 @@ export function renameFile(command) {
 }
 
 
-export function deleteFile(command) {
-  const fileName = command.slice(3);
+export function deleteFile(fileName) {
 
   if(!fileName) {
     console.error('Operation failed: Please use the command in the command format: rm path_to_file')

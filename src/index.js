@@ -2,7 +2,7 @@
 import readline from 'readline';
 // import os from 'os';
 import { goUp, goToFile, showList } from './utils/navigate.js';
-import { readFile, copyFile, moveFile } from './utils/streams.js';
+import { readFile, moveFile } from './utils/streams.js';
 import { createFile, deleteFile, renameFile } from './utils/fs.js';
 
 const args = process.argv.slice(2);
@@ -28,65 +28,69 @@ if (!USERNAME) {
 console.log(`Welcome to the File Manager, ${USERNAME}!`);
 console.log(`You are currently in :${process.cwd()}`);
 
+process.on('exit', () => {
+  console.log(`Thank you for using File Manager, ${USERNAME}, goodbye!`);
+})
+
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: '\n>\n ' 
+  prompt: '>\n ' 
 });
 
 rl.prompt();
 
 rl.on('line', (line) => {
-  line = line.trim();
+  const args  = line.trim().split(' ');
+  const command = args[0]
 
-  switch (true) {
+  switch (command) {
 
-    case line.startsWith('cd') :
-      goToFile(line.trim());
+    case 'cd':
+      goToFile(args[1]);
       break;
 
-    case line ===  'up' : 
+    case 'up' : 
       goUp();
       break;
-    case line === 'ls' :
+
+    case 'ls' :
       showList()
       break;
 
-    case line.startsWith('add') :
-      createFile(line);
+    case 'add' :
+      createFile(args[1]);
       break;
 
-    case line.startsWith('cat') :
-      readFile(line);
+    case  'cat' :
+      readFile(args[1]);
       break;
 
-    case line.startsWith('rn') :
-      renameFile(line);
+    case 'rn' :
+      renameFile(args[1], args[2]);
       break;
 
-    case line.startsWith('cp') :
-      copyFile(line);
+    case 'cp' :
+      moveFile(args[1], args[2], args[0]);
       break;
 
-    case line.startsWith('rm') :
-      deleteFile(line);
+    case 'rm' :
+      deleteFile(args[1]);
       break;
 
-    case line.startsWith('mv') :
-      moveFile(line);
+    case 'mv' :
+      moveFile(args[1], args[2], args[0]);
       break;
 
-    case line ===  '.exit':
-      console.log(`Thank you for using File Manager, ${USERNAME}, goodbye!`);
+    case '.exit':
       process.exit(0);
-
     
     default:
       console.log('Invalid input. Please try again with a valid option.');
       break;
   }
 
-  console.log(`You are currently in :${process.cwd()}`)
+  console.log(`You are currently in: ${process.cwd()}\n`)
   rl.prompt();
 });
