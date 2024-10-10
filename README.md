@@ -11,13 +11,13 @@ The file manager does the following:
 
 ## How to use?
 
-1. The program is started by `npm-script` start in following way:
+1. ### The program is started by `npm-script` start in following way:
 
 ```
 npm run start -- --username=your_username
 ```
 
-2. List of operations and their syntax:
+2. ### List of operations and their syntax:
 
    1. Navigation & working directory (nwd):
       - Go upper from current directory: ` up`
@@ -30,5 +30,11 @@ npm run start -- --username=your_username
       - Copy file: `  cp path_to_file path_to_new_directory`
       - Move file: `mv path_to_file path_to_new_directory`
       - Delete file: `rm path_to_file`
+   3. Operating system info:
+      - Get EOL: `os --EOL`
+      - Get host machine CPUs info: `os --cpus`
+      - Get home directory: `os --homedir`
+      - Get current system user name: `os --username`
+      - Get CPU architecture for which Node.js binary has compiled: `os --architecture`
 
-3. To finish our work press Ctrl + C or use command `.exit`
+3. ### To finish our work press Ctrl + C or use command `.exit`

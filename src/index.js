@@ -4,6 +4,7 @@ import readline from 'readline';
 import { goUp, goToFile, showList } from './utils/navigate.js';
 import { readFile, moveFile } from './utils/streams.js';
 import { createFile, deleteFile, renameFile } from './utils/fs.js';
+import { osInfo } from './utils/os.js';
 
 const args = process.argv.slice(2);
 
@@ -81,6 +82,10 @@ rl.on('line', (line) => {
 
     case 'mv' :
       moveFile(args[1], args[2], args[0]);
+      break;
+
+    case 'os' :
+      osInfo(args[1]);
       break;
 
     case '.exit':
