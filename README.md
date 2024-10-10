@@ -36,5 +36,7 @@ npm run start -- --username=your_username
       - Get home directory: `os --homedir`
       - Get current system user name: `os --username`
       - Get CPU architecture for which Node.js binary has compiled: `os --architecture`
+   4. Hash calculation
+      - Calculate hash for file: `hash path_to_file`
 
 3. ### To finish our work press Ctrl + C or use command `.exit`

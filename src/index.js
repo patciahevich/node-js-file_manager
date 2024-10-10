@@ -5,6 +5,7 @@ import { goUp, goToFile, showList } from './utils/navigate.js';
 import { readFile, moveFile } from './utils/streams.js';
 import { createFile, deleteFile, renameFile } from './utils/fs.js';
 import { osInfo } from './utils/os.js';
+import { calculateHash } from './utils/hash.js';
 
 const args = process.argv.slice(2);
 
@@ -86,6 +87,10 @@ rl.on('line', (line) => {
 
     case 'os' :
       osInfo(args[1]);
+      break;
+
+    case 'hash':
+      calculateHash(args[1]);
       break;
 
     case '.exit':
