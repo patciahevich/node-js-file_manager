@@ -1,81 +1,66 @@
-
 import fs from 'node:fs';
 import path from 'path';
 
-export function goUp() {
+export function createFile(command) {
+  const fileName = command.slice(4);
 
-const currentDir = process.cwd();
-const parentDir = path.dirname(currentDir);
-
-  try {
-    process.chdir(parentDir);
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-
-export function goToFile(command) {
-
-  const PATH = command.slice(3);
-
-  if(!PATH) {
-    console.error('Operation failed')
+  if(!fileName) {
+    console.error('Operation failed: You should write the file name')
     return
   }
 
-const targetDirectory = path.resolve(PATH);
+  const currentDir = process.cwd();
 
-  try {
-    process.chdir(targetDirectory);
-  } catch (err) {
-    console.error(err);
-  }
-}
+  const PATH = path.join(currentDir, fileName)
 
-
-export function showList() {
-const currentDir = process.cwd();
-
-  fs.readdir(currentDir, (err, filesInFolder) => {
+  fs.writeFile(PATH, '', (err) => {
 
     if (err) {
-      console.error(err)
-      return;
+      console.error(`Error creating file: ${err}`)
+    } else {
+      console.log(`The file ${fileName} created!`)
+    }
+  })
+}
+
+export function renameFile(command) {
+  const [pathToFile, newName] = command.slice(3).split(' ');
+
+  if(!pathToFile || !newName) {
+    console.error('Operation failed: Please use the command format: rn path_to_file new_filename')
+  }
+
+  const currentDir = process.cwd();
+  fs.rename(path.join(currentDir, pathToFile), path.join(currentDir, newName), (err) => {
+
+    if(err) {
+      console.error(`Error renaming file: ${err}`)
+    } else {
+      console.log(`The file has been renamed to ${newName}.`)
+    }
+  })
+}
+
+
+export function deleteFile(command) {
+  const fileName = command.slice(3);
+
+  if(!fileName) {
+    console.error('Operation failed: Please use the command in the command format: rm path_to_file')
+    return
+  }
+
+  const currentDir = process.cwd();
+  const PATH = path.join(currentDir, fileName);
+
+  fs.unlink(PATH, (err) => {
+    if(err) {
+      console.error(`Error deleting file: ${err}`)
     }
 
-    const directories = [];
-    const files = [];
-
-    const statePromises = filesInFolder.map((file) => {
-      return new Promise((resolve, reject) => {
-        fs.stat(file, (err, stat) => {
-
-          if(err) {
-            reject(err)
-          } else {
-
-            if (stat.isDirectory()) {
-              directories.push({
-                name: file,
-                type: 'folder'
-              })
-            } else {
-              files.push({
-                name: file,
-                type: 'file'
-              })
-            }
-            resolve()
-          }
-        })
-      })
-    })
-
-    Promise.all(statePromises).then(() => {
-      console.log('\n')
-      console.table(directories.concat(files))
-    }).catch(err => console.error(err))
-  });
-
+    console.log('File deleted.')
+  })
 }
+
+
+

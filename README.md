@@ -14,38 +14,21 @@ The file manager does the following:
 1. The program is started by `npm-script` start in following way:
 
 ```
-  npm run start -- --username=your_username
-
+npm run start -- --username=your_username
 ```
 
 2. List of operations and their syntax:
 
-- Go upper from current directory:
+   1. Navigation & working directory (nwd):
+      - Go upper from current directory: ` up`
+      - Go to dedicated folder from current directory (path_to_directory can be relative or absolute): `cd path_to_directory`
+      - Print in console list of all files and folders in current directory: ` ls`
+   2. Basic operations with files:
+      - Read file and print it's content in console: `cat path_to_file`
+      - Create empty file in current working directory: `add new_file_name`
+      - Rename file: `rn path_to_file new_filename`
+      - Copy file: `  cp path_to_file path_to_new_directory`
+      - Move file: `mv path_to_file path_to_new_directory`
+      - Delete file: `rm path_to_file`
 
-  ```
-  up
-  ```
-
-- Go to dedicated folder from current directory (path_to_directory can be relative or absolute):
-
-```
-cd path_to_directory
-```
-
-- Print in console list of all files and folders in current directory:
-
-```
-ls
-```
-
-3. To finish our work press Ctrl + C or use command:
-
-```
-
-.exit
-
-```
-
-```
-
-```
+3. To finish our work press Ctrl + C or use command `.exit`

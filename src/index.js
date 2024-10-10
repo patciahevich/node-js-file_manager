@@ -1,7 +1,9 @@
 
 import readline from 'readline';
-import os from 'os';
-import { goUp, goToFile, showList } from './utils/fs.js';
+// import os from 'os';
+import { goUp, goToFile, showList } from './utils/navigate.js';
+import { readFile, copyFile, moveFile } from './utils/streams.js';
+import { createFile, deleteFile, renameFile } from './utils/fs.js';
 
 const args = process.argv.slice(2);
 
@@ -20,8 +22,8 @@ if (!USERNAME) {
   process.exit(1);
 }
 
-const homeDir = os.homedir();
-process.chdir(homeDir);
+// const homeDir = os.homedir();
+// process.chdir(homeDir);
 
 console.log(`Welcome to the File Manager, ${USERNAME}!`);
 console.log(`You are currently in :${process.cwd()}`);
@@ -30,7 +32,7 @@ console.log(`You are currently in :${process.cwd()}`);
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: '> ' 
+  prompt: '\n>\n ' 
 });
 
 rl.prompt();
@@ -49,6 +51,30 @@ rl.on('line', (line) => {
       break;
     case line === 'ls' :
       showList()
+      break;
+
+    case line.startsWith('add') :
+      createFile(line);
+      break;
+
+    case line.startsWith('cat') :
+      readFile(line);
+      break;
+
+    case line.startsWith('rn') :
+      renameFile(line);
+      break;
+
+    case line.startsWith('cp') :
+      copyFile(line);
+      break;
+
+    case line.startsWith('rm') :
+      deleteFile(line);
+      break;
+
+    case line.startsWith('mv') :
+      moveFile(line);
       break;
 
     case line ===  '.exit':
