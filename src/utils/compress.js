@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'path';
 import zlib from 'node:zlib';
+import { showCurrentDir } from './helpers.js';
 
-export function compressFile(src, dest) {
+export async function compressFile(src, dest) {
 
   if(!src || !dest) {
     console.error('Invalid input. Please check README.md file');
@@ -17,20 +18,19 @@ export function compressFile(src, dest) {
   const writeStream = fs.createWriteStream(DEST);
   const compress = zlib.createBrotliCompress();
 
-  readStream
-    .pipe(compress)
-    .pipe(writeStream)
-    .on('error' , (err)=> {
-      console.error(`Error compressing: ${err}`)
-    })
-    .on('finish', () => {
-      console.log('File compressed.')
-    })
+  try {
+    await compressPromise(readStream, compress, writeStream);
+    console.log('File compressed.');
+  } catch (err) {
+    console.error(`Error compressing file: ${err}`)
+  } finally {
+    showCurrentDir();
+  }
 }
 
-export function decompress(src, dest) {
+export async function decompress(src, dest) {
   if(!src || !dest) {
-    console.error('Invalid input. Please check README.md file');
+    console.error('Invalid input. Please write the command like decompress path_to_file path_to_destination or check README.md file');
     return;
   }
 
@@ -42,13 +42,26 @@ export function decompress(src, dest) {
   const writeStream = fs.createWriteStream(DEST);
   const decompress = zlib.createBrotliDecompress();
 
-  readStream
-    .pipe(decompress)
-    .pipe(writeStream)
-    .on('error' , (err)=> {
-      console.error(`Error decompressing: ${err}`)
-    })
-    .on('finish', () => {
-      console.log('File decompressed.')
-    })
+  try {
+    await compressPromise(readStream, decompress, writeStream);
+    console.log('File decompressed.');
+  } catch (err) {
+    console.error(`Error decompressing file: ${err}`)
+  } finally {
+    showCurrentDir();
+  }
+}
+
+async function compressPromise(read, transform, write) {
+  return new Promise((resolve, reject) => {
+    read
+      .pipe(transform)
+      .pipe(write)
+      .on('error', (err) => {
+        reject(err)
+      })
+      .on('finish', () => {
+        resolve();
+      })
+  })
 }

@@ -1,8 +1,10 @@
 
 import fs from 'node:fs';
 import path from 'path';
+import { showCurrentDir } from './helpers.js';
+import { showFiles } from './promises.js';
 
-export function goUp() {
+export async function goUp() {
 
 const currentDir = process.cwd();
 const parentDir = path.dirname(currentDir);
@@ -11,11 +13,13 @@ const parentDir = path.dirname(currentDir);
     process.chdir(parentDir);
   } catch (err) {
     console.error(err)
+  } finally {
+    showCurrentDir();
   }
 }
 
 
-export function goToFile(pathToFile) {
+export async function goToFile(pathToFile) {
 
   if(!pathToFile) {
     console.error('Operation failed: Please use the command format: cd path_to_directory')
@@ -28,52 +32,26 @@ const targetDirectory = path.resolve(pathToFile);
     process.chdir(targetDirectory);
   } catch (err) {
     console.error(err);
+  } finally {
+    showCurrentDir()
   }
 }
 
 
-export function showList() {
-const currentDir = process.cwd();
+export async function showList() {
+  const currentDir = process.cwd();
+  const directories = [];
+  const files = [];
 
-  fs.readdir(currentDir, (err, filesInFolder) => {
-
-    if (err) {
-      console.error(err)
-      return;
-    }
-
-    const directories = [];
-    const files = [];
-
-    const statePromises = filesInFolder.map((file) => {
-      return new Promise((resolve, reject) => {
-        fs.stat(file, (err, stat) => {
-
-          if(err) {
-            reject(err)
-          } else {
-
-            if (stat.isDirectory()) {
-              directories.push({
-                name: file,
-                type: 'folder'
-              })
-            } else {
-              files.push({
-                name: file,
-                type: 'file'
-              })
-            }
-            resolve()
-          }
-        })
-      })
-    })
-
-    Promise.all(statePromises).then(() => {
-      console.log('\n')
-      console.table(directories.concat(files))
-    }).catch(err => console.error(err))
-  });
-
+  try {
+    const filesInFolder = await fs.promises.readdir(currentDir);
+    await showFiles(filesInFolder, directories, files);
+    console.log('\n');
+    console.table(directories.concat(files));
+    console.log('\n');
+  } catch(err) {
+    console.error(`Error list files: ${err}`);
+  } finally {
+    showCurrentDir();
+  }
 }

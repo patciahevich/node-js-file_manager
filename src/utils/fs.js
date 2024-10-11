@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'path';
+import { showCurrentDir } from './helpers.js';
 
-export function createFile(fileName) {
+export async function createFile(fileName) {
 
   if(!fileName) {
     console.error('Operation failed: You should write the file name')
@@ -9,54 +10,56 @@ export function createFile(fileName) {
   }
 
   const currentDir = process.cwd();
+  const PATH = path.join(currentDir, fileName);
 
-  const PATH = path.join(currentDir, fileName)
-
-  fs.writeFile(PATH, '', (err) => {
-
-    if (err) {
-      console.error(`Error creating file: ${err}`)
-    } else {
-      console.log(`The file ${fileName} created!`)
-    }
-  })
+  try {
+    await fs.promises.writeFile(PATH, '');
+    console.log(`The file ${fileName} created!`);
+  } catch  (err){
+    console.error(`Error creating file: ${err}`)
+  } finally {
+    showCurrentDir();
+  }
 }
 
-export function renameFile(pathToFile, newName) {
+export async function renameFile(pathToFile, newName) {
 
   if(!pathToFile || !newName) {
-    console.error('Operation failed: Please use the command format: rn path_to_file new_filename')
+    console.error('Operation failed: Please use the command format: rn path_to_file new_filename');
   }
 
   const currentDir = process.cwd();
-  fs.rename(path.join(currentDir, pathToFile), path.join(currentDir, newName), (err) => {
+  const oldPath = path.join(currentDir, pathToFile);
+  const newPath = path.join(currentDir, newName);
 
-    if(err) {
-      console.error(`Error renaming file: ${err}`)
-    } else {
-      console.log(`The file has been renamed to ${newName}.`)
-    }
-  })
+  try {
+    await fs.promises.rename(oldPath, newPath);
+    console.log(`The file has been renamed to ${newName}.`)
+  } catch(err) {
+    console.error(`Error renaming file: ${err}`)
+  } finally {
+    showCurrentDir();
+  }
 }
 
-
-export function deleteFile(fileName) {
+export async function deleteFile(fileName) {
 
   if(!fileName) {
-    console.error('Operation failed: Please use the command in the command format: rm path_to_file')
+    console.error('Operation failed: Please use the command in the command format: rm path_to_file');
     return
   }
 
   const currentDir = process.cwd();
   const PATH = path.join(currentDir, fileName);
 
-  fs.unlink(PATH, (err) => {
-    if(err) {
-      console.error(`Error deleting file: ${err}`)
-    }
-
-    console.log('File deleted.')
-  })
+  try {
+    await fs.promises.unlink(PATH);
+    console.log('File deleted.');
+  } catch(err) {
+    console.error(`Error deleting file: ${err}`);
+  } finally {
+    showCurrentDir();
+  }
 }
 
 

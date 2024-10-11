@@ -1,4 +1,5 @@
 import os from 'node:os';
+import { showCurrentDir } from './helpers.js';
 
 export function osInfo(command) {
 
@@ -7,30 +8,38 @@ export function osInfo(command) {
     return;
   }
 
-  switch (command) {
-    case '--EOL' :
-      console.log(`The End-Of-Line character for this system is: ${JSON.stringify(os.EOL)}`);
-      break;
-
-    case 'crus' :
-      getCrusInfo();
-      break;
-
-    case '--homedir' :
-      console.log(`The home directory is: ${os.homedir()}`);
-      break;
-
-    case '--username' :
-      console.log(`The current username is: ${os.userInfo().username}`);
-      break;
-
-    case '--architecture' :
-      console.log(`The CPU architecture for which this Node.js binary has been compiled is: ${process.arch}`);
-      break;
-
-    default:
-      console.error('Invalid input. Please check README.md file')
+  try {
+    switch (command) {
+      case '--EOL' :
+        console.log(`The End-Of-Line character for this system is: ${JSON.stringify(os.EOL)}`);
+        break;
+  
+      case 'crus' :
+        getCrusInfo();
+        break;
+  
+      case '--homedir' :
+        console.log(`The home directory is: ${os.homedir()}`);
+        break;
+  
+      case '--username' :
+        console.log(`The current username is: ${os.userInfo().username}`);
+        break;
+  
+      case '--architecture' :
+        console.log(`The CPU architecture for which this Node.js binary has been compiled is: ${process.arch}`);
+        break;
+  
+      default:
+        console.error('Invalid input. Please check README.md file')
+    }
+  } catch(err) {
+    console.error(`Error os operation: ${err}`)
+  } finally {
+    showCurrentDir();
   }
+
+
 }
 
 function getCrusInfo() {
