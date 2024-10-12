@@ -60,7 +60,7 @@ export async function showList() {
     const filesInFolder = await fs.promises.readdir(currentDir);
     await showFiles(filesInFolder, directories, files);
     console.log('\n');
-    console.table(directories.concat(files));
+    console.table(directories.sort().concat(files.sort()));
     console.log('\n');
   } catch(err) {
     console.error(`Error list files: ${err}`);
