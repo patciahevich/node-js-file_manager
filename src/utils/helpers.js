@@ -5,6 +5,15 @@ export function showCurrentDir() {
   console.log(`You are currently in: ${process.cwd()}\n`)
 }
 
+export async function checkPath(pathToFile) {
+  try {
+    await fs.promises.stat(pathToFile);
+    return true;
+  } catch(err) {
+    return false;
+  }
+}
+
 export function testCommand(src, dest) {
   // check src and dest
   if (!src || !dest) {

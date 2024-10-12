@@ -3,8 +3,7 @@ import path from 'path';
 
 export async function readFileWithPromise(fileName) {
   return new Promise((resolve, reject) => {
-    const currentDir = process.cwd();
-    const readStream = fs.createReadStream(path.join(currentDir, fileName));
+    const readStream = fs.createReadStream(path.resolve(fileName));
     readStream.on('data', (data) => {
       console.log(data.toString())
     })
@@ -19,12 +18,12 @@ export async function readFileWithPromise(fileName) {
   })
 }
 
-export async function moveFileWithPromise(src, dest, currentDir, command) {
+export async function moveFileWithPromise(src, dest, command) {
   const fileBasename =  path.basename(src);
 
   return new Promise((resolve, reject) => {
-    const readStream = fs.createReadStream(path.join(currentDir, src));
-    const writeStream = fs.createWriteStream(path.join(currentDir, dest, fileBasename));
+    const readStream = fs.createReadStream(path.resolve(src));
+    const writeStream = fs.createWriteStream(path.resolve(dest, fileBasename));
   
     readStream
       .pipe(writeStream)

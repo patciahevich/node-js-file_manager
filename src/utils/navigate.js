@@ -1,7 +1,7 @@
 
 import fs from 'node:fs';
 import path from 'path';
-import { showCurrentDir } from './helpers.js';
+import { showCurrentDir, checkPath } from './helpers.js';
 import { showFiles } from './promises.js';
 
 export async function goUp() {
@@ -18,7 +18,6 @@ const parentDir = path.dirname(currentDir);
   }
 }
 
-
 export async function goToFile(pathToFile) {
 
   if(!pathToFile) {
@@ -26,12 +25,26 @@ export async function goToFile(pathToFile) {
     return
   }
 
-const targetDirectory = path.resolve(pathToFile);
+  let PATH
+
+  const isExist = await checkPath(path.resolve(pathToFile));
+  if(!isExist) {
+    const newPath = path.resolve(pathToFile.replaceAll('_', ' '));
+    const isExist = await checkPath(newPath);
+    if(!isExist) {
+      console.error('No directory or file found with the specified name.');
+      return;
+    } else {
+      PATH = newPath;
+    } 
+  } else {
+    PATH = path.resolve(pathToFile)
+  }
 
   try {
-    process.chdir(targetDirectory);
+    process.chdir(PATH);
   } catch (err) {
-    console.error(err);
+    console.error(`Error going to file: ${err}`);
   } finally {
     showCurrentDir()
   }

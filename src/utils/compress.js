@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'path';
 import zlib from 'node:zlib';
-import { showCurrentDir } from './helpers.js';
+import { checkPath, showCurrentDir } from './helpers.js';
 
 export async function compressFile(src, dest) {
 
@@ -10,10 +10,16 @@ export async function compressFile(src, dest) {
     return;
   }
 
-  const currentDir = process.cwd();
-  const SRC = path.join(currentDir, src);
-  const DEST = path.join(currentDir, `${dest}.br`);
+  const SRC = path.resolve(src);
+  const DEST = path.resolve(`${dest}.br`);
 
+  const isExist = await checkPath(src);
+
+  if (!isExist) {
+    console.error('Operation failed: no such file or directory');
+    return;
+  }
+ 
   const readStream = fs.createReadStream(SRC);
   const writeStream = fs.createWriteStream(DEST);
   const compress = zlib.createBrotliCompress();
@@ -34,9 +40,15 @@ export async function decompress(src, dest) {
     return;
   }
 
-  const currentDir = process.cwd();
-  const SRC = path.join(currentDir, src);
-  const DEST = path.join(currentDir, dest);
+  const SRC = path.resolve(src);
+  const DEST = path.resolve(dest);
+
+  const isExist = await checkPath(SRC);
+
+  if (!isExist) {
+    console.error('Operation failed: no such file or directory');
+    return;
+  }
 
   const readStream = fs.createReadStream(SRC);
   const writeStream = fs.createWriteStream(DEST);

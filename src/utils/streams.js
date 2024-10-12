@@ -1,18 +1,25 @@
-import fs  from 'node:fs';
 import path from 'path';
 import { readFileWithPromise, moveFileWithPromise } from './promises.js';
-import { showCurrentDir, testCommand } from './helpers.js';
+import { showCurrentDir, testCommand, checkPath } from './helpers.js';
 
 
-export async function readFile(fileName) {
+export async function readFile(pathToFile) {
 
-  if(!fileName) {
+  if(!pathToFile) {
     console.error('Operation failed: You should write the file name.');
     return;
   }
 
+  const PATH = path.resolve(pathToFile)
+
+  const isExist = await checkPath(PATH);
+  if(!isExist) {
+    console.error('There is no file with this name.');
+    return;
+  }
+
   try {
-    await readFileWithPromise(fileName);
+    await readFileWithPromise(PATH);
   } catch(err) {
     console.error(`Error reading file: ${err}`);
   } finally {
@@ -28,18 +35,18 @@ export async function moveFile(src, dest, command) {
     return;
   }
 
-  const currentDir = process.cwd();
-  const PATH = path.join(currentDir, src);
-  
-  try {
-    await fs.promises.stat(PATH);
-  } catch(err) {
-    console.error('Operation failed: no such file or directory');
+  const SRC = path.resolve(src);
+  const DEST = path.resolve(dest);
+
+  const isExist = await checkPath(SRC);
+
+  if(!isExist) {
+    console.error('There is no file with this name.');
     return;
   }
 
   try {
-    await moveFileWithPromise(src, dest, currentDir, command);
+    await moveFileWithPromise(SRC, DEST, command);
   } catch(err) {
     console.error(`Error ${command === 'cp' ? 'copying' : 'moving'} file: ${err}`);
   } finally {

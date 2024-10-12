@@ -10,15 +10,7 @@ export async function calculateHash (pathToFile) {
     return;
   }
 
-  const currentDir = process.cwd();
-  const PATH = path.join(currentDir, pathToFile);
-
-  try {
-    await fs.promises.stat(PATH);
-  } catch(err) {
-    console.error('Operation failed: no such file or directory');
-    return;
-  }
+  const PATH = path.resolve(pathToFile);
 
   try {
     const hash = createHash('sha256');

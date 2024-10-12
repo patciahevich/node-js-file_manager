@@ -1,12 +1,7 @@
-
-
-// import os from 'os';
-
+import os from 'os';
 import { createReadLine } from "./readline.js";
 
-
 const args = process.argv.slice(2);
-
 const usernameArg = args.find(arg => arg.startsWith('--username='));
 
 if (!usernameArg) {
