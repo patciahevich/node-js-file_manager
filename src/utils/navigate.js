@@ -47,7 +47,6 @@ export async function showList() {
 
   try {
     const filesInFolder = await fs.promises.readdir(currentDir);
-    console.log(filesInFolder)
     await showFiles(filesInFolder, directories, files);
     console.log('\n');
     console.table(directories.sort(sortByName).concat(files.sort(sortByName)));
