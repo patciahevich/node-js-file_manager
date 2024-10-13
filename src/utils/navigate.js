@@ -1,7 +1,7 @@
 
 import fs from 'node:fs';
 import path from 'path';
-import { showCurrentDir, checkPath } from './helpers.js';
+import { checkPath, sortByName } from './helpers.js';
 import { showFiles } from './promises.js';
 
 export async function goUp() {
@@ -13,8 +13,6 @@ const parentDir = path.dirname(currentDir);
     process.chdir(parentDir);
   } catch (err) {
     console.error(err)
-  } finally {
-    showCurrentDir();
   }
 }
 
@@ -25,28 +23,19 @@ export async function goToFile(pathToFile) {
     return
   }
 
-  let PATH
+  let PATH = path.resolve(pathToFile);
 
-  const isExist = await checkPath(path.resolve(pathToFile));
-  if(!isExist) {
-    const newPath = path.resolve(pathToFile.replaceAll('_', ' '));
-    const isExist = await checkPath(newPath);
+  try {
+    const isExist = await checkPath(PATH);
+
     if(!isExist) {
       console.error('No directory or file found with the specified name.');
       return;
-    } else {
-      PATH = newPath;
-    } 
-  } else {
-    PATH = path.resolve(pathToFile)
-  }
+    }
 
-  try {
     process.chdir(PATH);
   } catch (err) {
     console.error(`Error going to file: ${err}`);
-  } finally {
-    showCurrentDir()
   }
 }
 
@@ -58,13 +47,12 @@ export async function showList() {
 
   try {
     const filesInFolder = await fs.promises.readdir(currentDir);
+    console.log(filesInFolder)
     await showFiles(filesInFolder, directories, files);
     console.log('\n');
-    console.table(directories.sort().concat(files.sort()));
+    console.table(directories.sort(sortByName).concat(files.sort(sortByName)));
     console.log('\n');
   } catch(err) {
     console.error(`Error list files: ${err}`);
-  } finally {
-    showCurrentDir();
   }
 }

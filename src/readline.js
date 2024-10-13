@@ -6,73 +6,75 @@ import { createFile, deleteFile, renameFile } from './utils/fs.js';
 import { osInfo } from './utils/os.js';
 import { calculateHash } from './utils/hash.js';
 import { compressFile, decompress } from './utils/compress.js';
+import { showCurrentDir } from './utils/helpers.js';
 
 export async function createReadLine() {
+  const regex = /(?<!\\)\s+/g;
 
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: '>\n ' 
+    prompt: '> ' 
   });
 
   rl.prompt();
 
-  rl.on('line', (line) => {
-    const args  = line.trim().split(' ');
-    const command = args[0]
+  rl.on('line', async (line) => {
+    const args  = line.trim().split(regex).map((item) => item.replaceAll('\\', ''));
+    const command = args[0];
 
     switch (command) {
 
       case 'cd':
-        goToFile(args[1]);
+        await goToFile(args[1]);
         break;
 
       case 'up' : 
-        goUp();
+         await goUp();
         break;
 
       case 'ls' :
-        showList()
+        await showList()
         break;
 
       case 'add' :
-        createFile(args[1]);
+        await createFile(args[1]);
         break;
 
       case  'cat' :
-        readFile(args[1]);
+        await readFile(args[1]);
         break;
 
       case 'rn' :
-        renameFile(args[1], args[2]);
+        await renameFile(args[1], args[2]);
         break;
 
       case 'cp' :
-        moveFile(args[1], args[2], args[0]);
+        await moveFile(args[1], args[2], args[0]);
         break;
 
       case 'rm' :
-        deleteFile(args[1]);
+        await deleteFile(args[1]);
         break;
 
       case 'mv' :
-        moveFile(args[1], args[2], args[0]);
+        await moveFile(args[1], args[2], args[0]);
         break;
 
       case 'os' :
-        osInfo(args[1]);
+        await osInfo(args[1]);
         break;
 
       case 'hash':
-        calculateHash(args[1]);
+        await calculateHash(args[1]);
         break;
 
       case 'compress' :
-        compressFile(args[1], args[2]);
+        await compressFile(args[1], args[2]);
         break;
 
       case 'decompress' :
-        decompress(args[1], args[2]);
+        await decompress(args[1], args[2]);
         break;
 
       case '.exit':
@@ -82,6 +84,8 @@ export async function createReadLine() {
         console.log('Invalid input. Please try again with a valid option.');
         break;
     }
+
+    showCurrentDir()
     rl.prompt();
   });
 }

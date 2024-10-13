@@ -1,5 +1,6 @@
 import fs  from 'node:fs';
 import path from 'path';
+import { checkPath } from './helpers.js';
 
 export async function readFileWithPromise(fileName) {
   return new Promise((resolve, reject) => {
@@ -20,10 +21,18 @@ export async function readFileWithPromise(fileName) {
 
 export async function moveFileWithPromise(src, dest, command) {
   const fileBasename =  path.basename(src);
+  const DEST = path.resolve(dest, fileBasename);
+
+  const destIsExist = await checkPath(DEST);
+
+  if(destIsExist) {
+    console.error(`Error: Cannot ${command === 'cp' ? 'copy' : 'move'}. The same name already exists in the destination directory.`);
+    return;
+  }
 
   return new Promise((resolve, reject) => {
     const readStream = fs.createReadStream(path.resolve(src));
-    const writeStream = fs.createWriteStream(path.resolve(dest, fileBasename));
+    const writeStream = fs.createWriteStream(DEST);
   
     readStream
       .pipe(writeStream)
@@ -36,7 +45,7 @@ export async function moveFileWithPromise(src, dest, command) {
         if(command === 'cp') {
           console.log('File copied.');
         } else {
-          fs.unlink(path.join(currentDir, src), (err) => {
+          fs.unlink(path.resolve(src), (err) => {
     
             if(err) {
               reject(err)
@@ -75,5 +84,5 @@ export async function showFiles(filesInFolder, directories, files) {
       })
     })
   })
-  return Promise.all(statePromises);
+  return Promise.allSettled(statePromises);
 }

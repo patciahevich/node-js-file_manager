@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'path';
-import { showCurrentDir, checkPath } from './helpers.js';
+import { checkPath } from './helpers.js';
 
 export async function createFile(fileName) {
 
@@ -23,8 +23,6 @@ export async function createFile(fileName) {
     console.log(`The file ${fileName} created!`);
   } catch  (err){
     console.error(`Error creating file: ${err}`)
-  } finally {
-    showCurrentDir();
   }
 }
 
@@ -55,8 +53,6 @@ export async function renameFile(pathToFile, newName) {
     console.log(`The file has been renamed to ${newName}.`)
   } catch(err) {
     console.error(`Error renaming file: ${err}`)
-  } finally {
-    showCurrentDir();
   }
 }
 
@@ -80,8 +76,6 @@ export async function deleteFile(fileName) {
     console.log('File deleted.');
   } catch(err) {
     console.error(`Error deleting file: ${err}`);
-  } finally {
-    showCurrentDir();
   }
 }
 

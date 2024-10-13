@@ -17,6 +17,8 @@ The file manager does the following:
 npm run start -- --username=your_username
 ```
 
+# 🔥Important note: To handle filenames with spaces, you can use the backslash (\\) to escape the spaces. 🔥
+
 2. ### List of operations and their syntax:
 
    1. Navigation & working directory (nwd):

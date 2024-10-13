@@ -24,10 +24,24 @@ export function testCommand(src, dest) {
     return false;
   }
 
-  // check if dest is a path to directory
-  if(dest.includes('.')) {
-    return false;
-  }
+  // check if dest is a dir
+  fs.stat(dest, (err, stats) => {
+    if (err) {
+      return false;
+    } else if (stats.isFile()) {
+      return false;
+    } 
+  });
 
   return true;
+}
+
+export function sortByName(a, b) {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
 }

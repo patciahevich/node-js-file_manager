@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'path';
 import zlib from 'node:zlib';
-import { checkPath, showCurrentDir } from './helpers.js';
+import { checkPath } from './helpers.js';
 
 export async function compressFile(src, dest) {
 
@@ -10,13 +10,21 @@ export async function compressFile(src, dest) {
     return;
   }
 
+  const fileName = path.basename(src, path.extname(src));
   const SRC = path.resolve(src);
-  const DEST = path.resolve(`${dest}.br`);
+  const DEST = path.resolve(dest, `${fileName}.br`);
 
-  const isExist = await checkPath(src);
+  const srcIsExist = await checkPath(SRC);
 
-  if (!isExist) {
+  if (!srcIsExist) {
     console.error('Operation failed: no such file or directory');
+    return;
+  }
+
+  const destIsExist = await checkPath(DEST);
+
+  if (destIsExist) {
+    console.error('Operation failed: The same name already exists in the destination directory.');
     return;
   }
  
@@ -29,8 +37,6 @@ export async function compressFile(src, dest) {
     console.log('File compressed.');
   } catch (err) {
     console.error(`Error compressing file: ${err}`)
-  } finally {
-    showCurrentDir();
   }
 }
 
@@ -40,13 +46,21 @@ export async function decompress(src, dest) {
     return;
   }
 
+  const fileName = path.basename(src, path.extname(src));
   const SRC = path.resolve(src);
-  const DEST = path.resolve(dest);
+  const DEST = path.resolve(dest, fileName);
 
-  const isExist = await checkPath(SRC);
+  const srcIsExist = await checkPath(SRC);
 
-  if (!isExist) {
+  if (!srcIsExist) {
     console.error('Operation failed: no such file or directory');
+    return;
+  }
+
+  const destIsExist = await checkPath(DEST);
+
+  if (destIsExist) {
+    console.error('Operation failed: The same name already exists in the destination directory.');
     return;
   }
 
@@ -59,8 +73,6 @@ export async function decompress(src, dest) {
     console.log('File decompressed.');
   } catch (err) {
     console.error(`Error decompressing file: ${err}`)
-  } finally {
-    showCurrentDir();
   }
 }
 

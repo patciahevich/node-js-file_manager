@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js"
   },
-  "author": "Volha Parsiahevich",
+  "author": "Volha Patsiahevich",
   "license": "ISC",
   "type": "module" 
 }

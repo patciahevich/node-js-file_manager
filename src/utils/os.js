@@ -1,5 +1,4 @@
 import os from 'node:os';
-import { showCurrentDir } from './helpers.js';
 
 export function osInfo(command) {
 
@@ -14,7 +13,7 @@ export function osInfo(command) {
         console.log(`The End-Of-Line character for this system is: ${JSON.stringify(os.EOL)}`);
         break;
   
-      case 'crus' :
+      case '--cpus' :
         getCrusInfo();
         break;
   
@@ -35,11 +34,7 @@ export function osInfo(command) {
     }
   } catch(err) {
     console.error(`Error os operation: ${err}`)
-  } finally {
-    showCurrentDir();
   }
-
-
 }
 
 function getCrusInfo() {

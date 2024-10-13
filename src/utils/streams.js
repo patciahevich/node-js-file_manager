@@ -1,6 +1,6 @@
 import path from 'path';
 import { readFileWithPromise, moveFileWithPromise } from './promises.js';
-import { showCurrentDir, testCommand, checkPath } from './helpers.js';
+import { testCommand, checkPath } from './helpers.js';
 
 
 export async function readFile(pathToFile) {
@@ -22,8 +22,6 @@ export async function readFile(pathToFile) {
     await readFileWithPromise(PATH);
   } catch(err) {
     console.error(`Error reading file: ${err}`);
-  } finally {
-    showCurrentDir();
   }
 }
 
@@ -38,9 +36,13 @@ export async function moveFile(src, dest, command) {
   const SRC = path.resolve(src);
   const DEST = path.resolve(dest);
 
-  const isExist = await checkPath(SRC);
+  if(DEST === process.cwd()) {
+    console.error(`Error: Cannot ${command === 'cp' ? 'copy' : 'move'} the file to the same directory.`);
+    return;
+  }
+  const srcIsExist = await checkPath(SRC);
 
-  if(!isExist) {
+  if(!srcIsExist) {
     console.error('There is no file with this name.');
     return;
   }
@@ -49,8 +51,6 @@ export async function moveFile(src, dest, command) {
     await moveFileWithPromise(SRC, DEST, command);
   } catch(err) {
     console.error(`Error ${command === 'cp' ? 'copying' : 'moving'} file: ${err}`);
-  } finally {
-    showCurrentDir();
   }
 }
 

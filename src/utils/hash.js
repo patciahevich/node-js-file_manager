@@ -1,7 +1,6 @@
 import { createHash } from 'crypto';
 import path from 'path';
 import fs from 'node:fs';
-import { showCurrentDir } from './helpers.js';
 
 export async function calculateHash (pathToFile) {
 
@@ -19,8 +18,6 @@ export async function calculateHash (pathToFile) {
     console.log(`Hash : ${hash.update(dataToHash).digest('hex')}`);
   } catch(err) {
     console.error(`Error hashing file: ${err}`);
-  } finally {
-    showCurrentDir();
   }
 };
 

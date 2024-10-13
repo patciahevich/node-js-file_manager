@@ -11,14 +11,13 @@ if (!usernameArg) {
 
 const USERNAME = usernameArg.split('=')[1];
 
-
 if (!USERNAME) {
   console.error("Error: username value is required.");
   process.exit(1);
 }
 
-// const homeDir = os.homedir();
-// process.chdir(homeDir);
+const homeDir = os.homedir();
+process.chdir(homeDir);
 
 console.log(`Welcome to the File Manager, ${USERNAME}!`);
 console.log(`You are currently in :${process.cwd()}`);
