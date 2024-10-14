@@ -46,9 +46,8 @@ export async function decompress(src, dest) {
     return;
   }
 
-  const fileName = path.basename(src, path.extname(src));
   const SRC = path.resolve(src);
-  const DEST = path.resolve(dest, fileName);
+  const DEST = path.resolve(dest);
 
   const srcIsExist = await checkPath(SRC);
 

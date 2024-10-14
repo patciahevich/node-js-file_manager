@@ -62,7 +62,9 @@ npm run start -- --username=your_username
    5. Compress and decompress operations:
 
       - Compress file (using Brotli algorithm): `compress path_to_file path_to_destination`
+        (❗ the path must contain the folder where the compressed file will be placed)
 
       - Decompress file (using Brotli algorithm): `decompress path_to_file path_to_destination`
+        (❗ the destination path must contain the file name and the required extension)
 
 3. ### To finish our work press Ctrl + C or use command `.exit`
